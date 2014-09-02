@@ -1,0 +1,16 @@
+{
+    "name": "staruml.relationship-view",
+    "title": "Relationship View",
+    "description": "Show relationships of selected element",
+    "homepage": "https://github.com/staruml/RelationshipView",
+    "version": "0.9.0",
+    "author": {
+        "name": "Minkyu Lee",
+        "email": "niklaus.lee@gmail.com",
+        "url": "https://github.com/niklauslee"
+    },
+    "license": "MIT",
+    "engines": {
+        "staruml": ">=2.0.0"
+    }
+}
