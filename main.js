@@ -27,14 +27,14 @@
 define(function (require, exports, module) {
     "use strict";
 
-    var ExtensionUtils   = staruml.getModule("utils/ExtensionUtils"),
-        PanelManager     = staruml.getModule("utils/PanelManager"),
-        Repository       = staruml.getModule("engine/Repository"),
-        SelectionManager = staruml.getModule("engine/SelectionManager"),
-        CommandManager   = staruml.getModule("command/CommandManager"),
-        Commands         = staruml.getModule("command/Commands"),
-        MenuManager      = staruml.getModule("menu/MenuManager");
-
+    var ExtensionUtils    = staruml.getModule("utils/ExtensionUtils"),
+        PanelManager      = staruml.getModule("utils/PanelManager"),
+        Repository        = staruml.getModule("engine/Repository"),
+        SelectionManager  = staruml.getModule("engine/SelectionManager"),
+        CommandManager    = staruml.getModule("command/CommandManager"),
+        Commands          = staruml.getModule("command/Commands"),
+        MenuManager       = staruml.getModule("menu/MenuManager"),
+        PreferenceManager = staruml.getModule("preference/PreferenceManager");
 
     var relationshipPanelTemplate = require("text!relationship-panel.html"),
         relationshipItemTemplate = require("text!relationship-item.html"),
@@ -45,8 +45,9 @@ define(function (require, exports, module) {
         $close,
         $button = $("<a id='toolbar-relationship-view' href='#' title='Relationship View'></a>");
 
-    var CMD_RELATIONSHIP_VIEW = "view.relationships";
-    
+    var CMD_RELATIONSHIP_VIEW = "view.relationships",
+        PREFERENCE_KEY = "view.relationships.visibility";
+
     /**
      * DataSource for ListView
      * @type {kendo.data.DataSource}
@@ -85,7 +86,8 @@ define(function (require, exports, module) {
     function show() {
         relationshipPanel.show();
         $button.addClass("selected");
-        
+        CommandManager.get(CMD_RELATIONSHIP_VIEW).setChecked(true);
+        PreferenceManager.set(PREFERENCE_KEY, true);
     }
 
     /**
@@ -93,7 +95,9 @@ define(function (require, exports, module) {
      */
     function hide() {
         relationshipPanel.hide();
-        $button.removeClass("selected");        
+        $button.removeClass("selected");
+        CommandManager.get(CMD_RELATIONSHIP_VIEW).setChecked(false);
+        PreferenceManager.set(PREFERENCE_KEY, false);
     }
 
     /**
@@ -104,7 +108,7 @@ define(function (require, exports, module) {
             hide();
         } else {
             show();
-        }        
+        }
     }
 
     /**
@@ -144,7 +148,7 @@ define(function (require, exports, module) {
         var menu = MenuManager.getMenu(Commands.VIEW);
         menu.addMenuDivider();
         menu.addMenuItem(CMD_RELATIONSHIP_VIEW, ["Ctrl-Alt-R"]);
-        
+
         // Handler for selectionChanged event
         $(SelectionManager).on("selectionChanged", function (event, models, views) {
             clearRelationshipItems();
@@ -175,9 +179,17 @@ define(function (require, exports, module) {
                     addRelationshipItem(rel, otherSide, role);
                 }
             }
-        });        
+        });
+
+        // Load Preference
+        var visible = PreferenceManager.get(PREFERENCE_KEY);
+        if (visible === true) {
+            show();
+        } else {
+            hide();
+        }
     }
-   
+
     // Initialize Extension
     init();
 
