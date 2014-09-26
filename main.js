@@ -27,18 +27,21 @@
 define(function (require, exports, module) {
     "use strict";
 
-    var ExtensionUtils    = staruml.getModule("utils/ExtensionUtils"),
-        PanelManager      = staruml.getModule("utils/PanelManager"),
-        Repository        = staruml.getModule("engine/Repository"),
-        SelectionManager  = staruml.getModule("engine/SelectionManager"),
-        CommandManager    = staruml.getModule("command/CommandManager"),
-        Commands          = staruml.getModule("command/Commands"),
-        MenuManager       = staruml.getModule("menu/MenuManager"),
-        PreferenceManager = staruml.getModule("preference/PreferenceManager");
+    var ExtensionUtils     = staruml.getModule("utils/ExtensionUtils"),
+        PanelManager       = staruml.getModule("utils/PanelManager"),
+        Repository         = staruml.getModule("engine/Repository"),
+        SelectionManager   = staruml.getModule("engine/SelectionManager"),
+        CommandManager     = staruml.getModule("command/CommandManager"),
+        Commands           = staruml.getModule("command/Commands"),
+        MenuManager        = staruml.getModule("menu/MenuManager"),
+        ContextMenuManager = staruml.getModule("menu/ContextMenuManager"),
+        ModelExplorerView  = staruml.getModule("explorer/ModelExplorerView"),
+        PreferenceManager  = staruml.getModule("preference/PreferenceManager");
 
     var relationshipPanelTemplate = require("text!relationship-panel.html"),
         relationshipItemTemplate = require("text!relationship-item.html"),
         relationshipPanel,
+        listView,
         $relationshipPanel,
         $listView,
         $title,
@@ -71,6 +74,7 @@ define(function (require, exports, module) {
         dataSource.add({
             id: elem._id,
             role: (role ? role + ":" : ""),
+            relId: rel._id,
             relName: rel.name,
             relIcon: rel.getNodeIcon(),
             relType: rel.getClassName(),
@@ -111,6 +115,48 @@ define(function (require, exports, module) {
         }
     }
 
+
+    function _handleSelectRelatedElement() {
+        if (listView.select().length > 0) {
+            var data = dataSource.view(),
+                item = data[listView.select().index()],
+                element = Repository.get(item.id);
+            if (element) {
+                ModelExplorerView.select(element, true);
+            }
+        }
+    }
+
+    function _handleSelectRelationship() {
+        if (listView.select().length > 0) {
+            var data = dataSource.view(),
+                item = data[listView.select().index()],
+                element = Repository.get(item.relId);
+            if (element) {
+                ModelExplorerView.select(element, true);
+            }
+        }
+    }
+
+    /**
+     * Setup ContextMenu
+     */
+    function _setupContextMenu() {
+
+        var CMD_SELECT_RELATED_ELEMENT = "relationshipView.selectRelatedElement",
+            CMD_SELECT_RELATIONSHIP    = "relationshipView.selectRelationship";
+
+        CommandManager.register("Select Related Element", CMD_SELECT_RELATED_ELEMENT, _handleSelectRelatedElement);
+        CommandManager.register("Select Relationship",    CMD_SELECT_RELATIONSHIP,    _handleSelectRelationship);
+
+        var CONTEXT_MENU = "context-menu-relationship-view";
+        var contextMenu;
+        contextMenu = ContextMenuManager.addContextMenu(CONTEXT_MENU, "#relationship-view div.listview");
+        contextMenu.addMenuItem(CMD_SELECT_RELATED_ELEMENT);
+        contextMenu.addMenuItem(CMD_SELECT_RELATIONSHIP);
+    }
+
+
     /**
      * Initialize Extension
      */
@@ -140,6 +186,7 @@ define(function (require, exports, module) {
             template: relationshipItemTemplate,
             selectable: true
         });
+        listView = $listView.data("kendoListView");
 
         // Register Commands
         CommandManager.register("Relationships", CMD_RELATIONSHIP_VIEW, toggle);
@@ -188,6 +235,8 @@ define(function (require, exports, module) {
         } else {
             hide();
         }
+
+        _setupContextMenu();
     }
 
     // Initialize Extension
