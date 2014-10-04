@@ -198,35 +198,39 @@ define(function (require, exports, module) {
 
         // Handler for selectionChanged event
         $(SelectionManager).on("selectionChanged", function (event, models, views) {
-            clearRelationshipItems();
-            if (models.length === 1) {
-                var m = models[0],
-                    rels = Repository.getRelationshipsOf(m);
-                for (var i = 0, len = rels.length; i < len; i++) {
-                    var rel = rels[i],
-                        otherSide,
-                        role;
-                    if (rel instanceof type.DirectedRelationship) {
-                        if (rel.source === m) {
-                            otherSide = rel.target;
-                            role = "(target)";
-                        } else {
-                            otherSide = rel.source;
-                            role = "(source)";
+            try {
+                clearRelationshipItems();
+                if (models.length === 1) {
+                    var m = models[0],
+                        rels = Repository.getRelationshipsOf(m);
+                    for (var i = 0, len = rels.length; i < len; i++) {
+                        var rel = rels[i],
+                            otherSide,
+                            role;
+                        if (rel instanceof type.DirectedRelationship) {
+                            if (rel.source === m) {
+                                otherSide = rel.target;
+                                role = "(target)";
+                            } else {
+                                otherSide = rel.source;
+                                role = "(source)";
+                            }
+                        } else if (rel instanceof type.UndirectedRelationship) {
+                            if (rel.end1.reference === m) {
+                                otherSide = rel.end2.reference;
+                                role = rel.end2.name;
+                            } else {
+                                otherSide = rel.end1.reference;
+                                role = rel.end1.name;
+                            }
                         }
-                    } else if (rel instanceof type.UndirectedRelationship) {
-                        if (rel.end1.reference === m) {
-                            otherSide = rel.end2.reference;
-                            role = rel.end2.name;
-                        } else {
-                            otherSide = rel.end1.reference;
-                            role = rel.end1.name;
+                        if (rel && otherSide) {
+                            addRelationshipItem(rel, otherSide, role);
                         }
-                    }
-                    if (rel && otherSide) {
-                        addRelationshipItem(rel, otherSide, role);
                     }
                 }
+            } catch (err) {
+                console.error(err);
             }
         });
 
