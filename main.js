@@ -223,7 +223,9 @@ define(function (require, exports, module) {
                             role = rel.end1.name;
                         }
                     }
-                    addRelationshipItem(rel, otherSide, role);
+                    if (rel && otherSide) {
+                        addRelationshipItem(rel, otherSide, role);
+                    }
                 }
             }
         });
