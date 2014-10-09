@@ -22,21 +22,21 @@
  */
 
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, regexp: true */
-/*global define, $, _, window, staruml, type, appshell, document */
+/*global define, $, _, window, app, type, appshell, document */
 
 define(function (require, exports, module) {
     "use strict";
 
-    var ExtensionUtils     = staruml.getModule("utils/ExtensionUtils"),
-        PanelManager       = staruml.getModule("utils/PanelManager"),
-        Repository         = staruml.getModule("engine/Repository"),
-        SelectionManager   = staruml.getModule("engine/SelectionManager"),
-        CommandManager     = staruml.getModule("command/CommandManager"),
-        Commands           = staruml.getModule("command/Commands"),
-        MenuManager        = staruml.getModule("menu/MenuManager"),
-        ContextMenuManager = staruml.getModule("menu/ContextMenuManager"),
-        ModelExplorerView  = staruml.getModule("explorer/ModelExplorerView"),
-        PreferenceManager  = staruml.getModule("preference/PreferenceManager");
+    var ExtensionUtils     = app.getModule("utils/ExtensionUtils"),
+        PanelManager       = app.getModule("utils/PanelManager"),
+        Repository         = app.getModule("engine/Repository"),
+        SelectionManager   = app.getModule("engine/SelectionManager"),
+        CommandManager     = app.getModule("command/CommandManager"),
+        Commands           = app.getModule("command/Commands"),
+        MenuManager        = app.getModule("menu/MenuManager"),
+        ContextMenuManager = app.getModule("menu/ContextMenuManager"),
+        ModelExplorerView  = app.getModule("explorer/ModelExplorerView"),
+        PreferenceManager  = app.getModule("preference/PreferenceManager");
 
     var relationshipPanelTemplate = require("text!relationship-panel.html"),
         relationshipItemTemplate = require("text!relationship-item.html"),
