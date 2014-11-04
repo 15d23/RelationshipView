@@ -29,7 +29,7 @@ define(function (require, exports, module) {
 
     var ExtensionUtils     = app.getModule("utils/ExtensionUtils"),
         PanelManager       = app.getModule("utils/PanelManager"),
-        Repository         = app.getModule("engine/Repository"),
+        Repository         = app.getModule("core/Repository"),
         SelectionManager   = app.getModule("engine/SelectionManager"),
         CommandManager     = app.getModule("command/CommandManager"),
         Commands           = app.getModule("command/Commands"),
