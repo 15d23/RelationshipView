@@ -4,7 +4,7 @@
     "description": "Show relationships of selected element",
     "homepage": "https://github.com/staruml/RelationshipView",
     "issues": "https://github.com/staruml/RelationshipView/issues",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "author": {
         "name": "Minkyu Lee",
         "email": "niklaus.lee@gmail.com",
