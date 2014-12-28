@@ -36,7 +36,7 @@ define(function (require, exports, module) {
         MenuManager        = app.getModule("menu/MenuManager"),
         ContextMenuManager = app.getModule("menu/ContextMenuManager"),
         ModelExplorerView  = app.getModule("explorer/ModelExplorerView"),
-        PreferenceManager  = app.getModule("preference/PreferenceManager");
+        PreferenceManager  = app.getModule("core/PreferenceManager");
 
     var relationshipPanelTemplate = require("text!relationship-panel.html"),
         relationshipItemTemplate = require("text!relationship-item.html"),
