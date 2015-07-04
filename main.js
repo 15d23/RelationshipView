@@ -187,6 +187,10 @@ define(function (require, exports, module) {
             selectable: true
         });
         listView = $listView.data("kendoListView");
+        $listView.dblclick(function (e) {
+            _handleSelectRelationship();
+        });
+
 
         // Register Commands
         CommandManager.register("Relationships", CMD_RELATIONSHIP_VIEW, toggle);
